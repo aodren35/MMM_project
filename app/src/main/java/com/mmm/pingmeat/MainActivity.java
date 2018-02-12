@@ -1,7 +1,9 @@
-package com.mmm.pingmeat.mmm_project;
+package com.mmm.pingmeat;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.mmm.pingmeat.mmm_project.R;
 
 public class MainActivity extends AppCompatActivity {
 
