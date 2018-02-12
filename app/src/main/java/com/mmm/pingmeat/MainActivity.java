@@ -15,14 +15,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void diaplayMap(View view) {
+    public void displayMap(View view) {
+        // Go to Google Map activity
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
-
-        /*Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        mapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(mapIntent);*/
     }
 
     public void goToUserSettings(String userId, View view) {
