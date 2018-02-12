@@ -21,12 +21,13 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void goToUserSettings(String userId, View view) {
+    public void goToUserSettings(View view) {
         // Go to user settings activity
         Intent intent = new Intent(MainActivity.this, UserSettingsActivity.class);
-        intent.putExtra(UserSettingsActivity.USER_KEY, userId);
+        // intent.putExtra(UserSettingsActivity.USER_KEY, userId);
 
-        startActivityForResult(intent, UserSettingsActivity.REQUEST_PROFILE);
+        //startActivityForResult(intent, UserSettingsActivity.REQUEST_PROFILE);
+        startActivity(intent);
 
     }
 }
