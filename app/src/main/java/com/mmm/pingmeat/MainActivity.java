@@ -1,6 +1,8 @@
 package com.mmm.pingmeat;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,9 +25,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(mapIntent);*/
     }
 
-    public void goToUserSettings(View view) {
+    public void goToUserSettings(String userId, View view) {
         // Go to user settings activity
-        Intent intent = new Intent(this, UserSettingsActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent(MainActivity.this, UserSettingsActivity.class);
+        intent.putExtra(UserSettingsActivity.USER_KEY, userId);
+
+        startActivityForResult(intent, UserSettingsActivity.REQUEST_PROFILE);
+
     }
 }
