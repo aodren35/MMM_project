@@ -17,4 +17,8 @@
         completions."
     </string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="posts_label">Posts:</string>
+
+
 </resources>

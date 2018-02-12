@@ -22,4 +22,10 @@ public class MainActivity extends AppCompatActivity {
         mapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(mapIntent);*/
     }
+
+    public void goToUserSettings(View view) {
+        // Go to user settings activity
+        Intent intent = new Intent(this, UserSettingsActivity.class);
+        startActivity(intent);
+    }
 }
