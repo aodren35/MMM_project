@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "453034328582",
+    "firebase_url": "https://pingmeat-90bf8.firebaseio.com",
+    "project_id": "pingmeat-90bf8",
+    "storage_bucket": "pingmeat-90bf8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:453034328582:android:57762a6cb3655cc5",
+        "android_client_info": {
+          "package_name": "com.mmm.pingmeat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "453034328582-vtfdgtkl67cceecfcjmq6m5a9nh4o51i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mmm.pingmeat",
+            "certificate_hash": "b1c9fe4f6cc1a2ba044e8e27688e89dfc531427a"
+          }
+        },
+        {
+          "client_id": "453034328582-c82tilou9991rh02grjoajjskdf3lbbu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAg7jDvKYxZ_kxNUjFzUzWGCfHPiob9JaA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "453034328582-c82tilou9991rh02grjoajjskdf3lbbu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
