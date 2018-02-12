@@ -1,4 +1,4 @@
-package com.mmm.pingmeat.mmm_project;
+package com.mmm.pingmeat;
 
 import org.junit.Test;
 

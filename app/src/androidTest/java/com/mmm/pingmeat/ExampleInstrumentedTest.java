@@ -1,4 +1,4 @@
-package com.mmm.pingmeat.mmm_project;
+package com.mmm.pingmeat;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.aodre.mmm_project", appContext.getPackageName());
+        assertEquals("com.mmm.pingmeat", appContext.getPackageName());
     }
 }
