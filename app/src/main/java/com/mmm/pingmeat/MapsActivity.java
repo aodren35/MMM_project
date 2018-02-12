@@ -1,11 +1,11 @@
 package com.mmm.pingmeat;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,7 +20,7 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private GoogleApiClient myGoogleApiClient;
+    private static final int LOCATION_REQUEST = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +32,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
+        mMap.getUiSettings().setAllGesturesEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
         double i = 0.005;
 
         getUserLocation(48.110081, -1.679274, "ME HERE");
@@ -44,12 +51,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             i = i + 0.005;
         }
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST);
             return;
         }
-
         mMap.setMyLocationEnabled(true);
-        /*myGoogleApiClient = new GoogleApiClient.Builder(this).addApi(LOCATION_SERVICE.API)*/
+
     }
 
     private void getUserLocation(double lat, double lng, String markerName) {
@@ -61,7 +68,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void getLocationFoodTrunk(double lat, double lng, String markerName) {
         LatLng location = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLng(location);
         mMap.addMarker(new MarkerOptions().position(location).title(markerName));
     }
 
