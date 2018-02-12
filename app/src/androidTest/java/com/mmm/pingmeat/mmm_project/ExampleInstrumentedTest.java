@@ -1,4 +1,4 @@
-package com.example.aodre.mmm_project;
+package com.mmm.pingmeat.mmm_project;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

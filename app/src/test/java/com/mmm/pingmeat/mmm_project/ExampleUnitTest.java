@@ -1,4 +1,4 @@
-package com.example.aodre.mmm_project;
+package com.mmm.pingmeat.mmm_project;
 
 import org.junit.Test;
 

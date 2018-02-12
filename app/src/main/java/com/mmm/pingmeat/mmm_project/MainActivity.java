@@ -1,4 +1,4 @@
-package com.example.aodre.mmm_project;
+package com.mmm.pingmeat.mmm_project;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
