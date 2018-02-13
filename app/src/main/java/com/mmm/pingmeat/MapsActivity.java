@@ -2,6 +2,7 @@ package com.mmm.pingmeat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -34,7 +35,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private static final int LOCATION_REQUEST = 500;
     private FusedLocationProviderClient mFusedLocationClient;
-    private Location mCurrentLocation;
+    Location mCurrentLocation;
+    LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        Log.v("Debug","Map onDestroy invoked");
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.v("Debug","Map OnPause invoked");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.v("Debug","Map onResume invoked");
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        Log.v("Debug","Map onStop invoked");
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        Log.v("Debug","Map onRestart invoked");
     }
 
 
@@ -77,7 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void getUserLocation(final String str) {
 
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -120,6 +152,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Double.toString(location.getLatitude()) + "," +
                 Double.toString(location.getLongitude());
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+
+        locationManager.removeUpdates(this);
     }
 
     @Override
@@ -158,6 +192,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         return true;
     }
+
+
 
     private void getLocationFoodTrunk(double lat, double lng, String markerName) {
         LatLng location = new LatLng(lat, lng);
