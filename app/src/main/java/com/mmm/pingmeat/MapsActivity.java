@@ -128,7 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (location != null) {
                             onLocationChanged(location);
                             // centre la caméra sur la position de l'appareil
-                            LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            LatLng userLocation = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
                             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(userLocation, 15);
                             mMap.addMarker(new MarkerOptions().position(userLocation)
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
