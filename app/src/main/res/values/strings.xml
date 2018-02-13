@@ -13,6 +13,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="client_id_google">AIzaSyBodw0B4v_EzES_S_CJ2EdqgfpkVn1URUw</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
