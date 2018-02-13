@@ -35,7 +35,10 @@
     <string name="price_food_truck">Prix :</string>
     <string name="selected_food_truck">Food Truck sélectionné</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="action_settings">Settings</string>
 
 
 </resources>
