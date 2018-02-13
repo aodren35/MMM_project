@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,11 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText userText;
     EditText passwordText;
     Button btnSignIn;
-
-    public void createAccount()
-    {
-        // redirect vers register
-    }
+    TextView textNoAccount;
 
     View.OnClickListener signInListner = new View.OnClickListener() {
         public void onClick(View v) { signIn(); }
@@ -64,6 +61,16 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    View.OnClickListener createAccountListner = new View.OnClickListener() {
+        public void onClick(View v) { createAccount(); }
+    };
+
+    public void createAccount()
+    {
+        Intent createAccount = new Intent(LoginActivity.this,RegisterActivity.class);
+        startActivity(createAccount);
+    }
+
     private void redirect()
     {
         boolean v = true;
@@ -88,6 +95,8 @@ public class LoginActivity extends AppCompatActivity {
         passwordText = findViewById(R.id.editPass);
         btnSignIn = findViewById(R.id.button_signin);
         btnSignIn.setOnClickListener(signInListner);
+        textNoAccount = findViewById(R.id.txtNoAccount);
+        textNoAccount.setOnClickListener(createAccountListner);
     }
 
     @Override
