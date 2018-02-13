@@ -2,6 +2,7 @@ package com.mmm.pingmeat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -34,7 +35,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private static final int LOCATION_REQUEST = 500;
     private FusedLocationProviderClient mFusedLocationClient;
-    private Location mCurrentLocation;
+    Location mCurrentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    }
+
+    protected void onPause(){
+        super.onPause();
+
+        SharedPreferences settings = getSharedPreferences("MyPrefsFile",0);
+        SharedPreferences.Editor editor = settings.edit();
+        // Necessary to clear first if we save preferences onPause.
+        editor.clear();
+        //editor.putInt("Metric", mMetric);
+        editor.commit();
     }
 
 
@@ -158,6 +170,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         return true;
     }
+
+
 
     private void getLocationFoodTrunk(double lat, double lng, String markerName) {
         LatLng location = new LatLng(lat, lng);
