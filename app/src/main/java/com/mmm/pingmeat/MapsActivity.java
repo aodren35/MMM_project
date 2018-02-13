@@ -154,7 +154,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 
         locationManager.removeUpdates(this);
-        locationManager = null;
     }
 
     @Override
