@@ -17,10 +17,15 @@
         completions."
     </string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_home">Home</string>
 
     <string name="posts_label">Posts:</string>
     <string name="button_map">Afficher les food trunks</string>
     <string name="button_user_settings">Go to User Settings</string>
+    <string name="button_home">Home</string>
+
+    <!-- Strings related to home -->
+    <string name="pingmeat">Ping Meat</string>
 
 
 </resources>
