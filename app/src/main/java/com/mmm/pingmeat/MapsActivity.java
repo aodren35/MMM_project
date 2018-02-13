@@ -202,7 +202,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         owner = findViewById(R.id.owner_food_truck);
         price = findViewById(R.id.price_food_truck);
 
-        name.setText("Nom Food Truck : " + currentFoodTruck.name);
+        name.setText("Nom : " + currentFoodTruck.name);
         owner.setText("Propriétaire : " + currentFoodTruck.gerant.username);
         price.setText("Prix : " + currentFoodTruck.prix);
 
