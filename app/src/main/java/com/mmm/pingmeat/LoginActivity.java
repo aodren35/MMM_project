@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -38,25 +39,21 @@ public class LoginActivity extends AppCompatActivity {
         String email = userText.getText().toString();
         String pass = passwordText.getText().toString();
 
-        mAuth.createUserWithEmailAndPassword(email, pass)
+        mAuth.signInWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task)
-                    {
+                    public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "createUserWithEmail:success");
+                            Log.d("debug", "signInWithEmail:success");
                             mUser = mAuth.getCurrentUser();
                             redirect();
                         } else {
                             // If sign in fails, display a message to the user.
-                            //Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-                            //        Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
+                            Log.w("debug", "signInWithEmail:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
                         }
-
-                        // ...
                     }
                 });
     }
