@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -24,6 +25,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.mmm.pingmeat.models.Foodtruck;
+import com.mmm.pingmeat.models.Gerant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +36,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private static final int LOCATION_REQUEST = 500;
     private FusedLocationProviderClient mFusedLocationClient;
-    Location mCurrentLocation;
-    LocationManager locationManager;
+    private Location mCurrentLocation;
+    private LocationManager locationManager;
+    private List<Foodtruck> listFoodTrunks;
+
+    private TextView name;
+    private TextView owner;
+    private TextView price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,36 +53,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
-        Log.v("Debug","Map onDestroy invoked");
+        Log.v("Debug", "Map onDestroy invoked");
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
-        Log.v("Debug","Map OnPause invoked");
+        Log.v("Debug", "Map OnPause invoked");
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        Log.v("Debug","Map onResume invoked");
+        Log.v("Debug", "Map onResume invoked");
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
-        Log.v("Debug","Map onStop invoked");
+        Log.v("Debug", "Map onStop invoked");
     }
 
     @Override
-    protected void onRestart(){
+    protected void onRestart() {
         super.onRestart();
-        Log.v("Debug","Map onRestart invoked");
+        Log.v("Debug", "Map onRestart invoked");
     }
 
 
@@ -89,10 +98,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.getUiSettings().setZoomControlsEnabled(true);
         double i = 0.005;
 
-        getUserLocation("ME HERE");
 
-        for (String foodTrunk : listFoodTrunks()) {
-            getLocationFoodTrunk(48.110081 + i, -1.679274 + i, foodTrunk);
+        getUserLocation("MOI");
+        createListFoodTrunks();
+
+        for (Foodtruck foodTrunk : this.listFoodTrunks) {
+            getLocationFoodTrunk(foodTrunk.latitude + i, foodTrunk.longitude + i, foodTrunk.name);
             i = i + 0.005;
         }
 
@@ -102,7 +113,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         mMap.setMyLocationEnabled(true);
-
+        mMap.setOnMarkerClickListener(this);
     }
 
     private void getUserLocation(final String str) {
@@ -114,7 +125,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // autorise les différents type localisation de l'appareil
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0,  this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
         locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 1000, 0, this);
 
         // obtenir la dernière localisation de l'appareil
@@ -136,7 +147,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 });
     }
-
 
 
     public void onLocationChanged(Location location) {
@@ -169,28 +179,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        Toast.makeText(this,
-                marker.getTitle() +
-                        " click",
-                Toast.LENGTH_SHORT).show();
-        // Retrieve the data from the marker.
-        Integer clickCount = (Integer) marker.getTag();
-
-        // Check if a click count was set, then display the click count.
-        if (clickCount != null) {
-            clickCount = clickCount + 1;
-            marker.setTag(clickCount);
-            Toast.makeText(this,
-                    marker.getTitle() +
-                            " has been clicked " + clickCount + " times.",
-                    Toast.LENGTH_SHORT).show();
+        Foodtruck foodtruckSelected = null;
+        if (marker.getTitle().equals("MOI")) {
+            return false;
+        } else {
+            for (Foodtruck foodtruck : listFoodTrunks) {
+                if (foodtruck.name.equals(marker.getTitle())) {
+                    foodtruckSelected = foodtruck;
+                    break;
+                }
+            }
+            setInformationFoodTruck(foodtruckSelected);
         }
         return true;
     }
 
+    private void setInformationFoodTruck(Foodtruck currentFoodTruck) {
+
+        name = findViewById(R.id.name_food_truck);
+        owner = findViewById(R.id.owner_food_truck);
+        price = findViewById(R.id.price_food_truck);
+
+        name.setText("Nom Food Truck : " + currentFoodTruck.name);
+        owner.setText("Propriétaire : " + currentFoodTruck.gerant.username);
+        price.setText("Prix : " + currentFoodTruck.prix);
+
+    }
 
 
     private void getLocationFoodTrunk(double lat, double lng, String markerName) {
@@ -198,12 +214,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.addMarker(new MarkerOptions().position(location).title(markerName));
     }
 
-    private List<String> listFoodTrunks() {
-        List<String> listFoodTrunks = new ArrayList<>();
-        listFoodTrunks.add("Toto");
-        listFoodTrunks.add("Titi");
-        listFoodTrunks.add("Tata");
-        listFoodTrunks.add("Tuto");
-        return listFoodTrunks;
+    private void createListFoodTrunks() {
+        this.listFoodTrunks = new ArrayList<>();
+
+        Foodtruck truck1 = new Foodtruck();
+        Gerant gerant1 = new Gerant();
+        gerant1.username = "Quang";
+        truck1.latitude = (float) 48.110081;
+        truck1.longitude = ((float) -1.679274);
+        truck1.name = "Truck 1";
+        truck1.prix = "Kebab 3€, Big Mac 3€";
+        truck1.gerant = gerant1;
+        listFoodTrunks.add(truck1);
+
+        Foodtruck truck2 = new Foodtruck();
+        Gerant gerant2 = new Gerant();
+        gerant2.username = "One";
+        truck2.latitude = (float) 48.110081;
+        truck2.longitude = ((float) -1.679274);
+        truck2.name = "Truck 2";
+        truck2.prix = "Kebab 5€, Big Mac 5€";
+        truck2.gerant = gerant2;
+        listFoodTrunks.add(truck2);
     }
 }
