@@ -16,6 +16,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="button_login_with_google">Se connecter avec google</string>
+
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_home">Home</string>
 
@@ -23,10 +25,12 @@
     <string name="button_map">Afficher les food trunks</string>
     <string name="button_user_settings">Go to User Settings</string>
     <string name="button_home">Home</string>
-    <string name="button_signin">Sign In</string>
+    <string name="button_signin">Se connecter</string>
 
     <!-- Strings related to home -->
     <string name="pingmeat">Ping Meat</string>
+
+
 
 
 </resources>
