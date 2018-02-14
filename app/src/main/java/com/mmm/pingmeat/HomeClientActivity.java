@@ -133,6 +133,16 @@ public class HomeClientActivity extends BaseActivity
         drawer.closeDrawer(GravityCompat.START);
     }
 
+    public void settings(View view) {
+
+        Fragment fragment = new SettingsClient();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+    }
+
     public void goToAdmin() {
         Intent i = new Intent(HomeClientActivity.this, HomeGerantActivity.class);
         startActivity(i);

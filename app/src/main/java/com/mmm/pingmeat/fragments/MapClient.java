@@ -72,7 +72,7 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
         mapView.onResume();
         mapView.getMapAsync(this);
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle("Map gérant");
+        getActivity().setTitle("Map client");
     }
 
     @Override
