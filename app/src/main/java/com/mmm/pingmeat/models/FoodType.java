@@ -12,15 +12,14 @@ import java.util.Map;
 @IgnoreExtraProperties
 public class FoodType
 {
-    public Integer foodtype_id;
+    //public Integer foodtype_id;
     public String name;
 
     public FoodType() {
 
     }
 
-    public FoodType(Integer foodtype_id, String name) {
-        this.foodtype_id = foodtype_id;
+    public FoodType(String name) {
         this.name = name;
     }
 
