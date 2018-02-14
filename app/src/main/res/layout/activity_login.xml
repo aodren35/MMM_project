@@ -112,8 +112,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fitsSystemWindows="true"
-        tools:context="com.mmm.pingmeat.LoginActivity"
-        >
+        tools:context="com.mmm.pingmeat.LoginActivity">
 
 
         <LinearLayout
@@ -160,7 +159,7 @@
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
 
-<!--            <android.support.v7.widget.AppCompatButton
+            <!--            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/button_signin"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -168,6 +167,12 @@
                 android:layout_marginTop="24dp"
                 android:padding="12dp"
                 android:text="Login" />-->
+            <TextView
+                android:id="@+id/textReinitPass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Vous avez perdu votre mot de passe ?" />
+
             <RelativeLayout
                 android:id="@+id/button_signin"
                 android:layout_width="300dp"
@@ -208,8 +213,6 @@
                     tools:ignore="VectorDrawableCompat" />
 
 
-
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -218,6 +221,7 @@
                     android:textColor="@drawable/login_button_text_selector" />
 
             </RelativeLayout>
+
             <TextView
                 android:id="@+id/txtNoAccount"
                 android:layout_width="fill_parent"

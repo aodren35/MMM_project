@@ -1,17 +1,11 @@
 package com.mmm.pingmeat;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,18 +23,84 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.mmm.pingmeat.models.Client;
+import com.mmm.pingmeat.models.Gerant;
 
 public class LoginActivity extends AppCompatActivity {
 
+    //region Variables
+
+    // Auth
     FirebaseAuth mAuth;
     FirebaseUser mUser;
-    EditText userText;
-    EditText passwordText;
-    RelativeLayout btnSignIn;
-    TextView textNoAccount;
-
-    RelativeLayout btnSignInGoogle;
     GoogleSignInClient mGoogleSignInClient;
+
+    // Db
+    FirebaseDatabase fireDb;
+    DatabaseReference mDatabase;
+
+    // UI
+    EditText emailText;
+    EditText passwordText;
+    RelativeLayout signInButton;
+    RelativeLayout googleSignInButton;
+    TextView createAccountText;
+    TextView reinitPassText;
+
+    //endregion
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        // recupere l'instance de FirebaseAuth
+        mAuth = FirebaseAuth.getInstance();
+        // recupere l'instance de FirebaseDatabase
+        fireDb = FirebaseDatabase.getInstance();
+        mDatabase = fireDb.getInstance().getReference();
+        // recupere les composant UI
+        emailText = findViewById(R.id.editUser);
+        passwordText = findViewById(R.id.editPass);
+        signInButton = findViewById(R.id.button_signin);
+        signInButton.setOnClickListener(signInListner);
+        googleSignInButton = findViewById(R.id.googleSignInButton);
+        googleSignInButton.setOnClickListener(signInGoogleListner);
+        createAccountText = findViewById(R.id.txtNoAccount);
+        createAccountText.setOnClickListener(createAccountListner);
+        reinitPassText = findViewById(R.id.textReinitPass);
+        reinitPassText.setOnClickListener(reinitPasswordListner);
+
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.client_id_google))
+                .requestEmail()
+                .build();
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // signout for debug
+        FirebaseAuth.getInstance().signOut();
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) { redirect();}
+        // Check if user is signed in (non-null) and update UI accordingly.
+        mUser = mAuth.getCurrentUser();
+        if(mUser != null) { redirect(); }
+        // Check if user's email is verified
+        //boolean emailVerified = user.isEmailVerified();
+
+    }
 
     View.OnClickListener signInListner = new View.OnClickListener() {
         public void onClick(View v) { signIn(); }
@@ -48,23 +108,21 @@ public class LoginActivity extends AppCompatActivity {
 
     public void signIn()
     {
-        String email = userText.getText().toString();
+        String email = emailText.getText().toString();
         String pass = passwordText.getText().toString();
-
         mAuth.signInWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d("debug", "signInWithEmail:success");
+                            Log.d("Login", "signInWithEmail:success");
                             mUser = mAuth.getCurrentUser();
                             redirect();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w("debug", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Log.w("Login", "signInWithEmail:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -143,83 +201,33 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(createAccount);
     }
 
+    View.OnClickListener reinitPasswordListner = new View.OnClickListener() {
+        public void onClick(View v) { reinitPassword(); }
+    };
+
+    public void reinitPassword()
+    {
+        String email = emailText.getText().toString();
+        if(email != null)
+        {
+            mAuth.sendPasswordResetEmail(email);
+        }
+    }
+
     private void redirect()
     {
-        boolean v = true;
-        if(v)
+        Client c = null;//mDatabase.child("Client").child(mUser.getUid());
+        Gerant g = null;//mDatabase.child("Gerant").child(mUser.getUid());
+        if(c == null)
         {
             Intent i = new Intent(LoginActivity.this,HomeActivity.class);
             startActivity(i);
         }
-        else
+        else if(g != null)
         {
-
+            Intent i = new Intent(LoginActivity.this,HomeActivity.class);
+            startActivity(i);
         }
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        mAuth = FirebaseAuth.getInstance();
-        userText = findViewById(R.id.editUser);
-        passwordText = findViewById(R.id.editPass);
-        btnSignIn = findViewById(R.id.button_signin);
-        btnSignIn.setOnClickListener(signInListner);
-        btnSignInGoogle = findViewById(R.id.googleSignInButton);
-        btnSignInGoogle.setOnClickListener(signInGoogleListner);
-        textNoAccount = findViewById(R.id.txtNoAccount);
-        textNoAccount.setOnClickListener(createAccountListner);
-
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.client_id_google))
-                .requestEmail()
-                .build();
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        // signout for debug
-        FirebaseAuth.getInstance().signOut();
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-
-
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null) { redirect();}
-        // Check if user is signed in (non-null) and update UI accordingly.
-        mUser = mAuth.getCurrentUser();
-        if(mUser != null) { redirect(); }
-
-    }
-
-        /* access user infos
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-if (user != null) {
-    // Name, email address, and profile photo Url
-    String name = user.getDisplayName();
-    String email = user.getEmail();
-    Uri photoUrl = user.getPhotoUrl();
-
-    // Check if user's email is verified
-    boolean emailVerified = user.isEmailVerified();
-
-    // The user's ID, unique to the Firebase project. Do NOT use this value to
-    // authenticate with your backend server, if you have one. Use
-    // FirebaseUser.getToken() instead.
-    String uid = user.getUid();
-}
-     */
-
 
 }

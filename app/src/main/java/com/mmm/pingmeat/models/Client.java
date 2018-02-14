@@ -10,16 +10,18 @@ import com.google.firebase.database.IgnoreExtraProperties;
 public class Client
 {
 
-    public Integer user_id;
     public String username;
+    public String email;
+    //public String password;
     public String avatar;
 
     public Client() {
     }
 
-    public Client(Integer user_id, String username, String avatar) {
-        this.user_id = user_id;
+    public Client(String username, String email, String avatar) {
         this.username = username;
+        this.email = email;
         this.avatar = avatar;
     }
+
 }
