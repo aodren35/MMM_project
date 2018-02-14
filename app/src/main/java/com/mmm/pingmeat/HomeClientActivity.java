@@ -48,7 +48,7 @@ public class HomeClientActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //add this line to display menu1 when the activity is loaded
-        displaySelectedScreen(R.id.nav_gallery);
+        displaySelectedScreen(R.id.nav_home_client);
     }
 
     @Override
@@ -100,17 +100,16 @@ public class HomeClientActivity extends BaseActivity
 
         //initializing the fragment object which is selected
         switch (itemId) {
-            case R.id.nav_home:
+            case R.id.nav_home_client:
                 fragment = new HomeClient();
                 break;
-            case R.id.nav_gallery:
+            case R.id.nav_map_client:
                 fragment = new MapClient();
                 break;
-            case R.id.nav_manage:
+            case R.id.nav_settings_client:
                 fragment = new SettingsClient();
                 break;
-            case R.id.nav_share:
-                break;
+
         }
 
         //replacing the fragment
