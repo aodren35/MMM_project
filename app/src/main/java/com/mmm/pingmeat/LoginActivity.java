@@ -110,22 +110,27 @@ public class LoginActivity extends AppCompatActivity {
     {
         String email = emailText.getText().toString();
         String pass = passwordText.getText().toString();
-        mAuth.signInWithEmailAndPassword(email, pass)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("Login", "signInWithEmail:success");
-                            mUser = mAuth.getCurrentUser();
-                            redirect();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("Login", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+        if (!email.equals(null) && !pass.equals(null) && !email.equals("") && !pass.equals("") ) {
+            mAuth.signInWithEmailAndPassword(email, pass)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d("Login", "signInWithEmail:success");
+                                mUser = mAuth.getCurrentUser();
+                                redirect();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w("Login", "signInWithEmail:failure", task.getException());
+                                Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        }
+        else {
+            Toast.makeText(LoginActivity.this, "Veuillez remplir tous les champs.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     View.OnClickListener signInGoogleListner = new View.OnClickListener() {
