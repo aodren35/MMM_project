@@ -20,13 +20,15 @@ import com.mmm.pingmeat.fragments.HomeGerant;
 import com.mmm.pingmeat.fragments.MapGerant;
 import com.mmm.pingmeat.fragments.SettingsGerant;
 
-public class HomeGerantActivity extends AppCompatActivity
+public class HomeGerantActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_gerant);
+        doAuthorization();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

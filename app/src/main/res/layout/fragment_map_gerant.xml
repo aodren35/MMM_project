@@ -16,7 +16,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="200dp"
-        tools:context="com.mmm.pingmeat.MapsActivity" />
+        tools:context=".HomeGerantActivity" />
 
     <TextView
         android:id="@+id/selected_food_truck"
