@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     RelativeLayout googleSignInButton;
     TextView createAccountText;
     TextView reinitPassText;
+    private ProgressBar progressBar;
 
     //endregion
 
@@ -75,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         createAccountText.setOnClickListener(createAccountListner);
         reinitPassText = findViewById(R.id.textReinitPass);
         reinitPassText.setOnClickListener(reinitPasswordListner);
+        progressBar = findViewById(R.id.progressBar);
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
