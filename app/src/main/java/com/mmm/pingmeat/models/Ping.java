@@ -12,7 +12,7 @@ import java.util.Map;
 @IgnoreExtraProperties
 public class Ping
 {
-    public Integer ping_id;
+    //public Integer ping_id;
     public Client client;
     public Float longitude;
     public Float latitude;
@@ -21,8 +21,7 @@ public class Ping
     public Ping() {
     }
 
-    public Ping(Integer ping_id, Client client, Float longitude, Float latitude, FoodType[] types) {
-        this.ping_id = ping_id;
+    public Ping(Client client, Float longitude, Float latitude, FoodType[] types) {
         this.client = client;
         this.longitude = longitude;
         this.latitude = latitude;

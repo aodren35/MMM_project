@@ -248,88 +248,20 @@ public class LoginActivity extends AppCompatActivity {
     }
     //endregion
 
-    private void FindUserInDb()
-    {
-        if(mUser != null)
-        {
-            Client clt = null;
-            Gerant ger = null;
-            mDatabase.child("Client").child(mUser.getUid())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            // Get user information
-                            clt = dataSnapshot.getChildren(Client.class);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-            mDatabase.child("Gerant").child(mUser.getUid())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            // Get user information
-                            ger = dataSnapshot.getChildren(Gerant.class);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-        }
-    }
-
-    private void AddFoodtruck()
-    {
-        mDatabase.child("Client").child(mUser.getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get user information
-                        Client client = dataSnapshot.getChildren(Client.class);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-        //mDatabase.child("Foodtruck").
-    }
-
-    private void insertFoodTruck(String name, Gerant gerant, Float latitude, Float longitude, FoodType type, String prix, String logo)
-    {
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        String key = mDatabase.child("foodtruck").push().getKey();
-        Foodtruck ft = new Foodtruck(name,gerant,latitude,longitude,type,prix,logo);
-        Map<String, Object> values = ft.toMap();
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/foodtruck/" + key, values);
-
-        mDatabase.updateChildren(childUpdates);
-    }
-
     private void redirect()
     {
-
-        //DatabaseReference cref = mDatabase.child("Client").child(mUser.getUid());
-        //DatabaseReference gref = mDatabase.child("Gerant").child(mUser.getUid());
-        //if(cref != null)
-        //{
-        //    Intent i = new Intent(LoginActivity.this,HomeActivity.class);
-        //    startActivity(i);
-        //}
-        //else if(gref != null)
-        //{
-        //    Intent i = new Intent(LoginActivity.this,HomeGerantActivity.class);
-        //    startActivity(i);
-        //}
+        DatabaseReference cref = mDatabase.child("Client").child(mUser.getUid());
+        DatabaseReference gref = mDatabase.child("Gerant").child(mUser.getUid());
+        if(cref != null)
+        {
+            Intent i = new Intent(LoginActivity.this,HomeActivity.class);
+            startActivity(i);
+        }
+        else if(gref != null)
+        {
+            Intent i = new Intent(LoginActivity.this,HomeGerantActivity.class);
+            startActivity(i);
+        }
     }
 
 }
