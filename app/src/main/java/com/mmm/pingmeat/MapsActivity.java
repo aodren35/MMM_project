@@ -47,12 +47,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        getUserLocation("MOI");
         setContentView(R.layout.activity_maps);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
 
     }
 
@@ -99,7 +102,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         double i = 0.005;
 
 
-        getUserLocation("MOI");
+
         createListFoodTrunks();
 
         for (Foodtruck foodTrunk : this.listFoodTrunks) {
