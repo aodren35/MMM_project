@@ -19,7 +19,7 @@ import com.mmm.pingmeat.fragments.HomeClient;
 import com.mmm.pingmeat.fragments.MapClient;
 import com.mmm.pingmeat.fragments.SettingsClient;
 
-public class HomeActivity extends AppCompatActivity
+public class HomeClientActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
@@ -104,7 +104,6 @@ public class HomeActivity extends AppCompatActivity
                 fragment = new SettingsClient();
                 break;
             case R.id.nav_share:
-
                 break;
         }
 

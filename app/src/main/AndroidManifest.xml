@@ -54,7 +54,7 @@
             android:name=".RegisterActivity"
             android:label="Register"></activity>
         <activity
-            android:name=".HomeActivity"
+            android:name=".HomeClientActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppCompat.NoActionBar" />
         <activity
