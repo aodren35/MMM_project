@@ -15,9 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.mmm.pingmeat.fragments.HomeFragment;
+import com.mmm.pingmeat.fragments.HomeClient;
 import com.mmm.pingmeat.fragments.MapClient;
-import com.mmm.pingmeat.fragments.MapGerant;
 import com.mmm.pingmeat.fragments.SettingsClient;
 
 public class HomeActivity extends AppCompatActivity
@@ -96,7 +95,7 @@ public class HomeActivity extends AppCompatActivity
         //initializing the fragment object which is selected
         switch (itemId) {
             case R.id.nav_home:
-                fragment = new HomeFragment();
+                fragment = new HomeClient();
                 break;
             case R.id.nav_gallery:
                 fragment = new MapClient();

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.mmm.pingmeat.R;
 
 
-public class HomeFragment extends Fragment {
+public class HomeClient extends Fragment {
 
     @Nullable
     @Override
