@@ -1,5 +1,6 @@
 package com.mmm.pingmeat.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,4 +28,5 @@ public class HomeClient extends Fragment {
         //you can set the title for your toolbar here for different fragments different titles
         getActivity().setTitle("Home client");
     }
+
 }

@@ -1,5 +1,6 @@
 package com.mmm.pingmeat;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -67,7 +68,8 @@ public class HomeGerantActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_gotoclient) {
+            this.goToClient();
             return true;
         }
 
@@ -112,5 +114,11 @@ public class HomeGerantActivity extends AppCompatActivity
         displaySelectedScreen(id);
 
         return true;
+    }
+
+
+    public void goToClient() {
+        Intent i = new Intent(HomeGerantActivity.this,HomeClientActivity.class);
+        startActivity(i);
     }
 }

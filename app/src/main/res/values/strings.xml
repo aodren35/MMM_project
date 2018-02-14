@@ -38,10 +38,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Go to admin</string>
     <string name="title_activity_home_gerant">HomeGerantActivity</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Home</string>
     <string name="Ping_meat_search">Appuyez sur le bouton ci-dessous pour rechercher les foodtrucks à proximité !</string>
 

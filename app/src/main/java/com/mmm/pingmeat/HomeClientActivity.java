@@ -71,7 +71,8 @@ public class HomeClientActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_gotoadmin) {
+            this.goToAdmin();
             return true;
         }
 
@@ -120,7 +121,16 @@ public class HomeClientActivity extends AppCompatActivity
 
     public void pingMeat(View view) {
 
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
+        Fragment fragment = new MapClient();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+    }
+
+    public void goToAdmin() {
+        Intent i = new Intent(HomeClientActivity.this,HomeGerantActivity.class);
+        startActivity(i);
     }
 }
