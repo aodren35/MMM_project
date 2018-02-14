@@ -213,9 +213,15 @@ public class LoginActivity extends AppCompatActivity {
     public void reinitPassword()
     {
         String email = emailText.getText().toString();
-        if(email != null)
+        if(email != null && !email.equals(""))
         {
             mAuth.sendPasswordResetEmail(email);
+            Toast.makeText(LoginActivity.this, "Une réinitialisation de mot de passe à été envoyée sur votre mail.",
+                    Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(LoginActivity.this, "Veuillez renseigner un e-mail valide.",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
