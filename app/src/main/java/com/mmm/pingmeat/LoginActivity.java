@@ -240,7 +240,7 @@ public class LoginActivity extends AppCompatActivity {
         DatabaseReference gref = mDatabase.child("Gerant").child(mUser.getUid());
         if(cref != null)
         {
-            Intent i = new Intent(LoginActivity.this,HomeGerantActivity.class);
+            Intent i = new Intent(LoginActivity.this,HomeActivity.class);
             startActivity(i);
         }
         else if(gref != null)
