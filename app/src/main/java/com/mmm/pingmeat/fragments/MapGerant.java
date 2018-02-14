@@ -18,16 +18,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.mmm.pingmeat.HomeGerantActivity;
 import com.mmm.pingmeat.R;
 import com.mmm.pingmeat.models.Foodtruck;
 import com.mmm.pingmeat.models.Gerant;
@@ -43,6 +45,7 @@ public class MapGerant extends Fragment implements OnMapReadyCallback, GoogleMap
 
 
     private GoogleMap mMap;
+    MapView mapView;
     private static final int LOCATION_REQUEST = 500;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location mCurrentLocation;
@@ -56,13 +59,19 @@ public class MapGerant extends Fragment implements OnMapReadyCallback, GoogleMap
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_map_gerant, container, false);
+        View v = inflater.inflate(R.layout.fragment_map_gerant, container, false);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        getUserLocation("MOI");
+        return v;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mapView = (MapView) view.findViewById(R.id.map_gerant);
+        mapView.onCreate(savedInstanceState);
+        mapView.onResume();
+        mapView.getMapAsync(this);
         super.onViewCreated(view, savedInstanceState);
-
         getActivity().setTitle("Map gérant");
     }
 
@@ -70,6 +79,7 @@ public class MapGerant extends Fragment implements OnMapReadyCallback, GoogleMap
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+
         mMap.getUiSettings().setAllGesturesEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -78,7 +88,6 @@ public class MapGerant extends Fragment implements OnMapReadyCallback, GoogleMap
         double i = 0.005;
 
 
-        getUserLocation("MOI");
         createListFoodTrunks();
 
         for (Foodtruck foodTrunk : this.listFoodTrunks) {
