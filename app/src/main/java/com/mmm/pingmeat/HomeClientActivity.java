@@ -15,21 +15,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
 import com.mmm.pingmeat.fragments.HomeClient;
 import com.mmm.pingmeat.fragments.MapClient;
 import com.mmm.pingmeat.fragments.SettingsClient;
 
-public class HomeClientActivity extends AppCompatActivity
+public class HomeClientActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-     FirebaseAuth mAuth;
+    FirebaseAuth mAuth;
+    FirebaseStorage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        doAuthorization();
         setContentView(R.layout.activity_home);
         mAuth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -130,7 +135,7 @@ public class HomeClientActivity extends AppCompatActivity
     }
 
     public void goToAdmin() {
-        Intent i = new Intent(HomeClientActivity.this,HomeGerantActivity.class);
+        Intent i = new Intent(HomeClientActivity.this, HomeGerantActivity.class);
         startActivity(i);
     }
 }
