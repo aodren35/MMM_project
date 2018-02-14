@@ -11,11 +11,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -31,6 +34,9 @@ import com.mmm.pingmeat.models.Gerant;
 public class LoginActivity extends AppCompatActivity {
 
     //region Variables
+
+    private final static int requestIdGoogle = 1;
+    private static final String TAG = "LoginActivity";
 
     // Auth
     FirebaseAuth mAuth;
@@ -56,6 +62,10 @@ public class LoginActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // signout for debug
+        FirebaseAuth.getInstance().signOut();
+
         // recupere l'instance de FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
         // recupere l'instance de FirebaseDatabase
@@ -76,24 +86,23 @@ public class LoginActivity extends AppCompatActivity {
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.client_id_google))
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // signout for debug
-        FirebaseAuth.getInstance().signOut();
+
     }
 
     @Override
     protected void onStart()
     {
         super.onStart();
-        // Check for existing Google Sign In account, if the user is already signed in
+/*        // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null) { redirect();}
+        if (account != null) { redirect();}*/
         // Check if user is signed in (non-null) and update UI accordingly.
         mUser = mAuth.getCurrentUser();
         if(mUser != null) { redirect(); }
@@ -140,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
     public void signInGoogle()
     {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, 1);
+        startActivityForResult(signInIntent, requestIdGoogle);
     }
 
     @Override
@@ -148,7 +157,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == 1) {
+        if (requestCode == requestIdGoogle) {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -231,12 +240,12 @@ public class LoginActivity extends AppCompatActivity {
         DatabaseReference gref = mDatabase.child("Gerant").child(mUser.getUid());
         if(cref != null)
         {
-            Intent i = new Intent(LoginActivity.this,HomeActivity.class);
+            Intent i = new Intent(LoginActivity.this,HomeGerantActivity.class);
             startActivity(i);
         }
         else if(gref != null)
         {
-            Intent i = new Intent(LoginActivity.this,HomeActivity.class);
+            Intent i = new Intent(LoginActivity.this,HomeGerantActivity.class);
             startActivity(i);
         }
     }
