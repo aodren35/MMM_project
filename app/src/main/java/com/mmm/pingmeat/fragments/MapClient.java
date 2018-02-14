@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -30,9 +30,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.mmm.pingmeat.LoginActivity;
 import com.mmm.pingmeat.R;
+import com.mmm.pingmeat.models.Client;
 import com.mmm.pingmeat.models.Foodtruck;
 import com.mmm.pingmeat.models.Gerant;
+import com.mmm.pingmeat.models.Ping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +64,12 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
     private TextView name;
     private TextView owner;
     private TextView price;
+
+    // Db
+    private FirebaseDatabase fireDb;
+    private DatabaseReference mDatabase;
+
+    private FirebaseAuth mAuth;
 
     @Nullable
     @Override
@@ -101,6 +116,8 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
         }
         mMap.setMyLocationEnabled(true);
         mMap.setOnMarkerClickListener(this);
+
+        Log.i("OUI", LoginActivity.mUser.getUid());
     }
 
     private void getUserLocation(final String str) {
@@ -130,6 +147,7 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                                     .title(str));
                             mMap.moveCamera(update);
+                            savePingData();
                         }
                     }
                 });
@@ -224,5 +242,24 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
         truck2.prix = "Kebab 5€, Big Mac 5€";
         truck2.gerant = gerant2;
         listFoodTrunks.add(truck2);
+    }
+
+    private void savePingData() {
+        // initialisation des instances pour firebase
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        fireDb = FirebaseDatabase.getInstance();
+        mDatabase = fireDb.getInstance().getReference("Ping");
+        mAuth = FirebaseAuth.getInstance();
+
+        // ajout objet ping dans BDD
+        String pingId = mDatabase.push().getKey();
+
+        if (pingId != null) {
+            Client currentClient = new Client(LoginActivity.mUser.getDisplayName(),
+                    LoginActivity.mUser.getEmail(), "");
+            Ping ping = new Ping(currentClient, (float) mCurrentLocation.getLongitude(),
+                    (float) mCurrentLocation.getLatitude(), null);
+            mDatabase.child(pingId).setValue(ping);
+        }
     }
 }

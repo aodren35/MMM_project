@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Auth
     FirebaseAuth mAuth;
-    FirebaseUser mUser;
+    public static FirebaseUser mUser;
     GoogleSignInClient mGoogleSignInClient;
 
     // Db
