@@ -216,14 +216,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private void redirect()
     {
-        Client c = null;//mDatabase.child("Client").child(mUser.getUid());
-        Gerant g = null;//mDatabase.child("Gerant").child(mUser.getUid());
-        if(c == null)
+        DatabaseReference cref = mDatabase.child("Client").child(mUser.getUid());
+        DatabaseReference gref = mDatabase.child("Gerant").child(mUser.getUid());
+        if(cref != null)
         {
             Intent i = new Intent(LoginActivity.this,HomeActivity.class);
             startActivity(i);
         }
-        else if(g != null)
+        else if(gref != null)
         {
             Intent i = new Intent(LoginActivity.this,HomeActivity.class);
             startActivity(i);
