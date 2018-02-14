@@ -7,4 +7,5 @@
     <item name="ic_menu_send" type="drawable">@android:drawable/ic_menu_send</item>
     <item name="ic_lock_power_off" type="drawable">@android:drawable/ic_lock_power_off</item>
     <item name="ic_menu_mylocation" type="drawable">@android:drawable/ic_menu_mylocation</item>
+    <item name="home" type="drawable">@android:drawable/ic_input_get</item>
 </resources>

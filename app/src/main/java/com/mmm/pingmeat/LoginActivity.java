@@ -26,10 +26,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mmm.pingmeat.models.Client;
+import com.mmm.pingmeat.models.FoodType;
+import com.mmm.pingmeat.models.Foodtruck;
 import com.mmm.pingmeat.models.Gerant;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -44,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
 
     // Db
-    FirebaseDatabase fireDb;
     DatabaseReference mDatabase;
 
     // UI
@@ -69,8 +76,7 @@ public class LoginActivity extends AppCompatActivity {
         // recupere l'instance de FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
         // recupere l'instance de FirebaseDatabase
-        fireDb = FirebaseDatabase.getInstance();
-        mDatabase = fireDb.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         // recupere les composant UI
         emailText = findViewById(R.id.editUser);
         passwordText = findViewById(R.id.editPass);
@@ -111,6 +117,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    //region Sign In
     View.OnClickListener signInListner = new View.OnClickListener() {
         public void onClick(View v) { signIn(); }
     };
@@ -126,13 +133,15 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
-                                Log.d("Login", "signInWithEmail:success");
+                                Log.d(TAG, "signInWithEmail:success");
+                                Toast.makeText(LoginActivity.this, "Authentication success",Toast.LENGTH_SHORT).show();
                                 mUser = mAuth.getCurrentUser();
                                 redirect();
                             } else {
                                 // If sign in fails, display a message to the user.
-                                Log.w("Login", "signInWithEmail:failure", task.getException());
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
                                 Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -141,7 +150,9 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, "Veuillez remplir tous les champs.", Toast.LENGTH_SHORT).show();
         }
     }
+    //endregion
 
+    //region Sign In Google
     View.OnClickListener signInGoogleListner = new View.OnClickListener() {
         public void onClick(View v) { signInGoogle(); }
     };
@@ -158,8 +169,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == requestIdGoogle) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
+            // The Task returned from this call is always completed, no need to attach a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         }
@@ -168,21 +178,19 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
             // Signed in successfully, show authenticated UI.
             firebaseAuthWithGoogle(account);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("lol", "signInResult:failed code=" + e.getStatusCode());
-            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
         }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d("lol", "firebaseAuthWithGoogle:" + acct.getId());
 
+        Log.d("lol", "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -192,19 +200,24 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("lol", "signInWithCredential:success");
                             mUser = mAuth.getCurrentUser();
+                            TryInsertIntoDb();
                             redirect();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("lol", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
                         }
-
-                        // ...
                     }
                 });
     }
 
+    private void TryInsertIntoDb()
+    {
+
+    }
+    //endregion
+
+    //region Sign Up
     View.OnClickListener createAccountListner = new View.OnClickListener() {
         public void onClick(View v) { createAccount(); }
     };
@@ -214,7 +227,9 @@ public class LoginActivity extends AppCompatActivity {
         Intent createAccount = new Intent(LoginActivity.this,RegisterActivity.class);
         startActivity(createAccount);
     }
+    //endregion
 
+    //region Reinit Password
     View.OnClickListener reinitPasswordListner = new View.OnClickListener() {
         public void onClick(View v) { reinitPassword(); }
     };
@@ -225,29 +240,96 @@ public class LoginActivity extends AppCompatActivity {
         if(email != null && !email.equals(""))
         {
             mAuth.sendPasswordResetEmail(email);
-            Toast.makeText(LoginActivity.this, "Une réinitialisation de mot de passe à été envoyée sur votre mail.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Une réinitialisation de mot de passe à été envoyée sur votre mail.", Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(LoginActivity.this, "Veuillez renseigner un e-mail valide.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Veuillez renseigner un e-mail valide.", Toast.LENGTH_SHORT).show();
         }
+    }
+    //endregion
+
+    private void FindUserInDb()
+    {
+        if(mUser != null)
+        {
+            Client clt = null;
+            Gerant ger = null;
+            mDatabase.child("Client").child(mUser.getUid())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Get user information
+                            clt = dataSnapshot.getChildren(Client.class);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+            mDatabase.child("Gerant").child(mUser.getUid())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Get user information
+                            ger = dataSnapshot.getChildren(Gerant.class);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+        }
+    }
+
+    private void AddFoodtruck()
+    {
+        mDatabase.child("Client").child(mUser.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user information
+                        Client client = dataSnapshot.getChildren(Client.class);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        //mDatabase.child("Foodtruck").
+    }
+
+    private void insertFoodTruck(String name, Gerant gerant, Float latitude, Float longitude, FoodType type, String prix, String logo)
+    {
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        String key = mDatabase.child("foodtruck").push().getKey();
+        Foodtruck ft = new Foodtruck(name,gerant,latitude,longitude,type,prix,logo);
+        Map<String, Object> values = ft.toMap();
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/foodtruck/" + key, values);
+
+        mDatabase.updateChildren(childUpdates);
     }
 
     private void redirect()
     {
-        DatabaseReference cref = mDatabase.child("Client").child(mUser.getUid());
-        DatabaseReference gref = mDatabase.child("Gerant").child(mUser.getUid());
-        if(cref != null)
-        {
-            Intent i = new Intent(LoginActivity.this,HomeGerantActivity.class);
-            startActivity(i);
-        }
-        else if(gref != null)
-        {
-            Intent i = new Intent(LoginActivity.this,HomeGerantActivity.class);
-            startActivity(i);
-        }
+
+        //DatabaseReference cref = mDatabase.child("Client").child(mUser.getUid());
+        //DatabaseReference gref = mDatabase.child("Gerant").child(mUser.getUid());
+        //if(cref != null)
+        //{
+        //    Intent i = new Intent(LoginActivity.this,HomeActivity.class);
+        //    startActivity(i);
+        //}
+        //else if(gref != null)
+        //{
+        //    Intent i = new Intent(LoginActivity.this,HomeGerantActivity.class);
+        //    startActivity(i);
+        //}
     }
 
 }

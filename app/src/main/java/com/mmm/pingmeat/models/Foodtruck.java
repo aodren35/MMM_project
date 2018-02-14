@@ -1,6 +1,10 @@
 package com.mmm.pingmeat.models;
 
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Murakumo on 13/02/2018.
@@ -8,7 +12,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class Foodtruck
 {
-    public Integer foodtruck_id;
+    //public Integer foodtruck_id;
     public String name;
     public Gerant gerant;
     public Float latitude;
@@ -22,8 +26,7 @@ public class Foodtruck
 
     }
 
-    public Foodtruck(Integer foodtruck_id, String name, Gerant gerant, Float latitude, Float longitude, FoodType type, String prix, String logo) {
-        this.foodtruck_id = foodtruck_id;
+    public Foodtruck(String name, Gerant gerant, Float latitude, Float longitude, FoodType type, String prix, String logo) {
         this.name = name;
         this.gerant = gerant;
         this.latitude = latitude;
@@ -32,5 +35,19 @@ public class Foodtruck
         this.prix = prix;
         this.logo = logo;
     }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("name",name);
+        result.put("gerant",gerant);
+        result.put("latitude",latitude);
+        result.put("longitude",longitude);
+        result.put("type",type);
+        result.put("prix",prix);
+        result.put("logo",logo);
+        return result;
+    }
+
 }
 
