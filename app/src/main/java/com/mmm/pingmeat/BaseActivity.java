@@ -33,4 +33,8 @@ public class BaseActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
+
+    public FirebaseUser getUser(){
+        return mUser;
+    }
 }

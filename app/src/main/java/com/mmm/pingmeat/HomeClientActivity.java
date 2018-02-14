@@ -24,16 +24,11 @@ public class HomeClientActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    FirebaseAuth mAuth;
-    FirebaseStorage storage;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         doAuthorization();
         setContentView(R.layout.activity_home);
-        mAuth = FirebaseAuth.getInstance();
-        storage = FirebaseStorage.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
