@@ -60,8 +60,6 @@ public class MapGerant extends Fragment implements OnMapReadyCallback, GoogleMap
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_map_gerant, container, false);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        getUserLocation("MOI");
         return v;
     }
 
@@ -87,6 +85,8 @@ public class MapGerant extends Fragment implements OnMapReadyCallback, GoogleMap
         mMap.getUiSettings().setZoomControlsEnabled(true);
         double i = 0.005;
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        getUserLocation("MOI");
 
         createListFoodTrunks();
 
