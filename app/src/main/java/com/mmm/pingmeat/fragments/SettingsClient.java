@@ -19,7 +19,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.StorageReference;
 import com.mmm.pingmeat.HomeClientActivity;
 import com.mmm.pingmeat.R;
 
@@ -29,6 +31,7 @@ public class SettingsClient extends Fragment {
     private TextView nameEditText;
     private ImageView imageView;
     private ProgressBar progressBar;
+    private StorageReference storeRefImageProfile;
 
     @Nullable
     @Override
@@ -49,6 +52,9 @@ public class SettingsClient extends Fragment {
 
         // load profile
         fillUIFields();
+        StorageReference storageRef = ((HomeClientActivity) getActivity()).getStorage().getReference();
+        storeRefImageProfile = storageRef.child(((HomeClientActivity) getActivity()).getUser().getUid()+"/user.jpg");
+
     }
 
     private void fillUIFields() {
@@ -58,11 +64,35 @@ public class SettingsClient extends Fragment {
             if (user.getPhotoUrl() != null && !user.getPhotoUrl().equals("")) {
                 Log.d("LOL", "DANS NON NUL" + user.getPhotoUrl());
 
+
                 Glide.with(this)
+                        .using(new FirebaseImageLoader())
+                        .load(storeRefImageProfile)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .crossFade()
+                        .error(R.drawable.user)
+                        .listener(new RequestListener<StorageReference, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, StorageReference model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                scheduleStartPostponedTransition(imageView);
+                                progressBar.setVisibility(View.GONE);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, StorageReference model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                scheduleStartPostponedTransition(imageView);
+                                progressBar.setVisibility(View.GONE);
+                                return false;
+                            }
+                        })
+                        .into(imageView);
+
+                /*Glide.with(this)
                         .load(user.getPhotoUrl())
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .crossFade()
-                        // .error(R.drawable.ic_stub)
+                        .error(R.drawable.user)
                         .listener(new RequestListener<Uri, GlideDrawable>() {
                             @Override
                             public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -78,7 +108,7 @@ public class SettingsClient extends Fragment {
                                 return false;
                             }
                         })
-                        .into(imageView);
+                        .into(imageView);*/
             } else {
                 Log.d("LOL", "DANS NUL");
 
