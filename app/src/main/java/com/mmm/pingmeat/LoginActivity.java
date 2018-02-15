@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Auth
     FirebaseAuth mAuth;
-    public static FirebaseUser mUser;
+    FirebaseUser mUser;
     GoogleSignInClient mGoogleSignInClient;
 
     // Db
@@ -241,7 +241,9 @@ public class LoginActivity extends AppCompatActivity {
     private void redirect()
     {
         DatabaseReference cref = mDatabase.child("Client").child(mUser.getUid());
+        Log.i("TEST", cref.getKey());
         DatabaseReference gref = mDatabase.child("Gerant").child(mUser.getUid());
+        Log.i("TEST2", gref.getKey());
         if(cref != null)
         {
             Intent i = new Intent(LoginActivity.this,HomeClientActivity.class);

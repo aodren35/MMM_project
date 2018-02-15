@@ -111,8 +111,6 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
         }
         mMap.setMyLocationEnabled(true);
         mMap.setOnMarkerClickListener(this);
-
-        Log.i("OUI", LoginActivity.mUser.getUid());
     }
 
     private void getUserLocation(final String str) {
@@ -241,18 +239,40 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
         // initialisation des instances pour firebase
         mDatabase = FirebaseDatabase.getInstance().getReference();
         fireDb = FirebaseDatabase.getInstance();
-        mDatabase = fireDb.getInstance().getReference("Ping");
         mAuth = FirebaseAuth.getInstance();
 
         // ajout objet ping dans BDD
-        String pingId = mDatabase.push().getKey();
+        final String pingId = mDatabase.push().getKey();
 
-        if (pingId != null) {
-            Client currentClient = new Client(LoginActivity.mUser.getDisplayName(),
-                    LoginActivity.mUser.getEmail(), "");
-            Ping ping = new Ping(currentClient, (float) mCurrentLocation.getLongitude(),
-                    (float) mCurrentLocation.getLatitude(), null);
-            mDatabase.child(pingId).setValue(ping);
-        }
+        // get user data
+        mDatabase = fireDb.getInstance().getReference("Client");
+
+        final Client[] currentClient = new Client[1];
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot foodtruckSnapshot : dataSnapshot.getChildren()) {
+                    Client client = foodtruckSnapshot.getValue(Client.class);
+                    if (client.getEmail().contains(mAuth.getCurrentUser().getEmail())) {
+                        currentClient[0] = client;
+                        currentClient[0].setFavorites(listFoodTrucks);
+
+                        mDatabase = fireDb.getInstance().getReference("Ping");
+                        if (pingId != null) {
+                            Ping ping = new Ping(currentClient[0], (float) mCurrentLocation.getLongitude(),
+                                    (float) mCurrentLocation.getLatitude(), null);
+                            mDatabase.child(pingId).setValue(ping);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
