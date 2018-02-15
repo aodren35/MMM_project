@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.mmm.pingmeat.fragments.HomeGerant;
 import com.mmm.pingmeat.fragments.MapGerant;
 import com.mmm.pingmeat.fragments.SettingsGerant;
@@ -91,6 +92,12 @@ public class HomeGerantActivity extends BaseActivity
                 break;
             case R.id.nav_settings_gerant:
                 fragment = new SettingsGerant();
+                break;
+            case R.id.nav_sign_out:
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
                 break;
         }
 

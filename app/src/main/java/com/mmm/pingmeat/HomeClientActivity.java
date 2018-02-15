@@ -104,7 +104,12 @@ public class HomeClientActivity extends BaseActivity
             case R.id.nav_settings_client:
                 fragment = new SettingsClient();
                 break;
-
+            case R.id.nav_sign_out:
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                break;
         }
 
         //replacing the fragment
