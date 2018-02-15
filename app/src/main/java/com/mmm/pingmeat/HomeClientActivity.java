@@ -117,8 +117,8 @@ public class HomeClientActivity extends BaseActivity
             case R.id.nav_home_client:
                 fragment = new HomeClient();
                 break;
-            case R.id.nav_map_client:
-                fragment = new MapClient();
+            case R.id.nav_map_foodtruks_favoris:
+                fragment = new FoodTrucksFavoris();
                 break;
             case R.id.nav_settings_client:
                 fragment = new SettingsClient();
