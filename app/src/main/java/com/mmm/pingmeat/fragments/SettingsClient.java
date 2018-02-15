@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,8 +55,9 @@ public class SettingsClient extends Fragment {
         FirebaseUser user = ((HomeClientActivity) getActivity()).getUser();
         if (user != null) {
             nameEditText.setText(user.getDisplayName());
+            if (user.getPhotoUrl() != null && !user.getPhotoUrl().equals("")) {
+                Log.d("LOL", "DANS NON NUL" + user.getPhotoUrl());
 
-            if (user.getPhotoUrl() != null) {
                 Glide.with(this)
                         .load(user.getPhotoUrl())
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -78,6 +80,8 @@ public class SettingsClient extends Fragment {
                         })
                         .into(imageView);
             } else {
+                Log.d("LOL", "DANS NUL");
+
                 progressBar.setVisibility(View.GONE);
                 imageView.setImageResource(R.drawable.user);
             }
