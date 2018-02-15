@@ -95,15 +95,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart()
     {
         super.onStart();
-/*        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null) { redirect();}*/
-        // Check if user is signed in (non-null) and update UI accordingly.
         mUser = mAuth.getCurrentUser();
         if(mUser != null) { redirect(); }
-        // Check if user's email is verified
-        //boolean emailVerified = user.isEmailVerified();
 
     }
 
