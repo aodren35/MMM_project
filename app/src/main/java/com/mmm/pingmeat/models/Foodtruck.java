@@ -17,7 +17,7 @@ public class Foodtruck
     public Gerant gerant;
     public Float latitude;
     public Float longitude;
-    public FoodType type;
+    public String type;
     public String prix;
     public String logo;
 
@@ -26,7 +26,7 @@ public class Foodtruck
 
     }
 
-    public Foodtruck(String name, Gerant gerant, Float latitude, Float longitude, FoodType type, String prix, String logo) {
+    public Foodtruck(String name, Gerant gerant, Float latitude, Float longitude, String type, String prix, String logo) {
         this.name = name;
         this.gerant = gerant;
         this.latitude = latitude;
