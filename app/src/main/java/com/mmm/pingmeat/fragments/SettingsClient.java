@@ -17,6 +17,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -24,8 +25,11 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.mmm.pingmeat.HomeClientActivity;
 import com.mmm.pingmeat.R;
 
@@ -33,6 +37,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.app.Activity.RESULT_OK;
 
 public class SettingsClient extends Fragment {
 
@@ -42,7 +48,7 @@ public class SettingsClient extends Fragment {
     private ProgressBar progressBar;
     private StorageReference storeRefImageProfile;
 
-    static final int REQUEST_TAKE_PHOTO = 1;
+    static final int REQUEST_TAKE_PHOTO = 2;
     private String mCurrentPhotoPath;
     private Uri photoURI;
 
@@ -88,7 +94,7 @@ public class SettingsClient extends Fragment {
                             "com.example.android.fileprovider",
                             photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                    getActivity().startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                 }
             }
         }
@@ -97,7 +103,7 @@ public class SettingsClient extends Fragment {
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = "user";
         File storageDir = this.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -180,6 +186,38 @@ public class SettingsClient extends Fragment {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("LOL", "DANS NUL" + (data == null));
+        if (requestCode == this.REQUEST_TAKE_PHOTO) {
+
+            StorageReference riversRef = ((HomeClientActivity) getActivity()).getStorage().getReference().child(((HomeClientActivity) getActivity()).getUser().getUid() + "/user.jpg");
+            UploadTask uploadTask = riversRef.putFile(this.photoURI);
+
+            // Register observers to listen for when the download is done or if it fails
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    Toast.makeText(getActivity(), "Problème d'upload", Toast.LENGTH_SHORT).show();
+
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    Toast.makeText(getActivity(), "Image uploaded", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), "Problème d'upload", Toast.LENGTH_SHORT).show();
+
+        }
     }
 
 }
