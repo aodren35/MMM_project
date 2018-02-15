@@ -19,7 +19,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mmm.pingmeat.models.Client;
+import com.mmm.pingmeat.models.Foodtruck;
 import com.mmm.pingmeat.models.Gerant;
+
+import java.util.ArrayList;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -109,7 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
             String email = mailText.getText().toString();
             //String password = passwordText.getText().toString();
             if (clientRadio.isChecked()) {
-                Client c = new Client(username, email, "");
+                Client c = new Client(username, email, "", new ArrayList<Foodtruck>());
                 mDatabase.child("Client").child(userId).setValue(c);
             } else {
                 Gerant g = new Gerant(username, email, "");
