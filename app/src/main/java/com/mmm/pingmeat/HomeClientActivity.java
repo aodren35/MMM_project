@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
+import com.mmm.pingmeat.fragments.FoodTrucksFavoris;
 import com.mmm.pingmeat.fragments.HomeClient;
 import com.mmm.pingmeat.fragments.MapClient;
 import com.mmm.pingmeat.fragments.SettingsClient;
@@ -97,8 +98,8 @@ public class HomeClientActivity extends BaseActivity
             case R.id.nav_home_client:
                 fragment = new HomeClient();
                 break;
-            case R.id.nav_map_client:
-                fragment = new MapClient();
+            case R.id.nav_map_foodtruks_favoris:
+                fragment = new FoodTrucksFavoris();
                 break;
             case R.id.nav_settings_client:
                 fragment = new SettingsClient();
@@ -135,6 +136,16 @@ public class HomeClientActivity extends BaseActivity
     public void settings(View view) {
 
         Fragment fragment = new SettingsClient();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+    }
+
+    public void foodTrucksFavoris(View view) {
+
+        Fragment fragment = new FoodTrucksFavoris();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, fragment);
         ft.commit();
