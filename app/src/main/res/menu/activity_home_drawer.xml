@@ -21,7 +21,7 @@
     <item android:title="Déconnexion">
         <menu>
             <item
-                android:id="@+id/nav_sign_out"
+                android:id="@+id/nav_sign_out_client"
                 android:icon="@drawable/ic_lock_power_off"
                 android:title="Se déconnecter" />
         </menu>

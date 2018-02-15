@@ -15,8 +15,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void displayMap(View view) {
         // Go to Google Map activity
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, MapsActivity.class);
+        //startActivity(intent);
     }
 
     public void goToUserSettings(View view) {

@@ -93,7 +93,7 @@ public class HomeGerantActivity extends BaseActivity
             case R.id.nav_settings_gerant:
                 fragment = new SettingsGerant();
                 break;
-            case R.id.nav_sign_out:
+            case R.id.nav_sign_out_gerant:
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);

@@ -18,10 +18,10 @@ tools:showIn="navigation_view">
         android:title="Mon compte" />
 </group>
 
-<item android:title="Déconnection">
+<item android:title="Déconnexion">
     <menu>
         <item
-            android:id="@+id/nav_share"
+            android:id="@+id/nav_sign_out_gerant"
             android:icon="@drawable/ic_lock_power_off"
             android:title="Se déconnecter" />
     </menu>
