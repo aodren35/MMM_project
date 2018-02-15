@@ -254,7 +254,7 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot foodtruckSnapshot : dataSnapshot.getChildren()) {
                     Client client = foodtruckSnapshot.getValue(Client.class);
-                    if (client.getEmail().contains(mAuth.getCurrentUser().getEmail())) {
+                    if (client.getEmail().equals(mAuth.getCurrentUser().getEmail())) {
                         currentClient[0] = client;
                         currentClient[0].setFavorites(listFoodTrucks);
 

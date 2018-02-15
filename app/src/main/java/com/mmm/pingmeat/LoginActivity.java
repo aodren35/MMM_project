@@ -24,8 +24,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -233,20 +236,31 @@ public class LoginActivity extends AppCompatActivity {
 
     private void redirect()
     {
-        DatabaseReference cref = mDatabase.child("Client").child(mUser.getUid());
-        Log.i("TEST", cref.getKey());
-        DatabaseReference gref = mDatabase.child("Gerant").child(mUser.getUid());
-        Log.i("TEST2", gref.getKey());
-        if(cref != null)
-        {
-            Intent i = new Intent(LoginActivity.this,HomeClientActivity.class);
-            startActivity(i);
-        }
-        else if(gref != null)
-        {
-            Intent i = new Intent(LoginActivity.this,HomeGerantActivity.class);
-            startActivity(i);
-        }
+        mDatabase = FirebaseDatabase.getInstance().getReference("Gerant");
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Intent i = null;
+                for (DataSnapshot gerant : dataSnapshot.getChildren()) {
+                    if (gerant.getKey().equals(mAuth.getUid())) {
+                        i = new Intent(LoginActivity.this,HomeGerantActivity.class);
+                        startActivity(i);
+                        break;
+                    }
+                }
+
+                if (i == null) {
+                    i = new Intent(LoginActivity.this,HomeClientActivity.class);
+                    startActivity(i);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
