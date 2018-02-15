@@ -1,10 +1,14 @@
 package com.mmm.pingmeat.fragments;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +27,22 @@ import com.google.firebase.auth.FirebaseUser;
 import com.mmm.pingmeat.HomeClientActivity;
 import com.mmm.pingmeat.R;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class SettingsClient extends Fragment {
 
 
     private TextView nameEditText;
     private ImageView imageView;
     private ProgressBar progressBar;
+    static final int REQUEST_TAKE_PHOTO = 1;
+    private String mCurrentPhotoPath;
+    private Uri photoURI;
+
+
 
     @Nullable
     @Override
@@ -44,12 +58,53 @@ public class SettingsClient extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
         imageView = (ImageView) getActivity().findViewById(R.id.imageView);
+        imageView.setOnClickListener(takePicture);
         nameEditText = (TextView) getActivity().findViewById(R.id.nameEditText);
         getActivity().setTitle("Settings client");
 
         // load profile
         fillUIFields();
     }
+
+    ImageView.OnClickListener takePicture = new ImageView.OnClickListener() {
+        public void onClick(View v) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                // Create the File where the photo should go
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                }
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    photoURI = FileProvider.getUriForFile(getActivity(),
+                            "com.example.android.fileprovider",
+                            photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                }
+            }
+        }
+    };
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = this.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
 
     private void fillUIFields() {
         FirebaseUser user = ((HomeClientActivity) getActivity()).getUser();
