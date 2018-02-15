@@ -59,7 +59,7 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
     private FusedLocationProviderClient mFusedLocationClient;
     private Location mCurrentLocation;
     private LocationManager locationManager;
-    private List<Foodtruck> listFoodTrunks;
+    private List<Foodtruck> listFoodTrucks;
 
     private TextView name;
     private TextView owner;
@@ -102,12 +102,7 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         getUserLocation("MOI");
 
-        createListFoodTrunks();
-
-        for (Foodtruck foodTrunk : this.listFoodTrunks) {
-            getLocationFoodTrunk(foodTrunk.latitude + i, foodTrunk.longitude + i, foodTrunk.name);
-            i = i + 0.005;
-        }
+        createMarkerFoodTrucks();
 
         // ajout du bouton localisation de l'appareil
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -143,9 +138,6 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
                             // centre la caméra sur la position de l'appareil
                             LatLng userLocation = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
                             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(userLocation, 15);
-                            mMap.addMarker(new MarkerOptions().position(userLocation)
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                                    .title(str));
                             mMap.moveCamera(update);
                             savePingData();
                         }
@@ -191,7 +183,7 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
         if (marker.getTitle().equals("MOI")) {
             return false;
         } else {
-            for (Foodtruck foodtruck : listFoodTrunks) {
+            for (Foodtruck foodtruck : listFoodTrucks) {
                 if (foodtruck.name.equals(marker.getTitle())) {
                     foodtruckSelected = foodtruck;
                     break;
@@ -215,33 +207,34 @@ public class MapClient extends Fragment implements OnMapReadyCallback, GoogleMap
     }
 
 
-    private void getLocationFoodTrunk(double lat, double lng, String markerName) {
+    private void getLocationFoodTruck(double lat, double lng, String markerName) {
         LatLng location = new LatLng(lat, lng);
         mMap.addMarker(new MarkerOptions().position(location).title(markerName));
     }
 
-    private void createListFoodTrunks() {
-        this.listFoodTrunks = new ArrayList<>();
+    private void createMarkerFoodTrucks() {
+        this.listFoodTrucks = new ArrayList<>();
+        mDatabase = fireDb.getInstance().getReference("foodtruck");
 
-        Foodtruck truck1 = new Foodtruck();
-        Gerant gerant1 = new Gerant();
-        gerant1.username = "Quang";
-        truck1.latitude = (float) 48.110081;
-        truck1.longitude = ((float) -1.679274);
-        truck1.name = "Truck 1";
-        truck1.prix = "Kebab 3€, Big Mac 3€";
-        truck1.gerant = gerant1;
-        listFoodTrunks.add(truck1);
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot foodtruckSnapshot : dataSnapshot.getChildren()) {
+                    Foodtruck foodtruck = foodtruckSnapshot.getValue(Foodtruck.class);
+                    listFoodTrucks.add(foodtruck);
+                    getLocationFoodTruck(foodtruck.latitude, foodtruck.longitude, foodtruck.name);
+                }
+            }
 
-        Foodtruck truck2 = new Foodtruck();
-        Gerant gerant2 = new Gerant();
-        gerant2.username = "One";
-        truck2.latitude = (float) 48.110081;
-        truck2.longitude = ((float) -1.679274);
-        truck2.name = "Truck 2";
-        truck2.prix = "Kebab 5€, Big Mac 5€";
-        truck2.gerant = gerant2;
-        listFoodTrunks.add(truck2);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        for (Foodtruck f : this.listFoodTrucks) {
+            Log.i("FOOD", f.gerant.username );
+        }
     }
 
     private void savePingData() {

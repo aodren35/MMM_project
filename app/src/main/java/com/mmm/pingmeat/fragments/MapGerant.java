@@ -127,9 +127,6 @@ public class MapGerant extends Fragment implements OnMapReadyCallback, GoogleMap
                             // centre la caméra sur la position de l'appareil
                             LatLng userLocation = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
                             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(userLocation, 15);
-                            mMap.addMarker(new MarkerOptions().position(userLocation)
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                                    .title(str));
                             mMap.moveCamera(update);
                         }
                     }
