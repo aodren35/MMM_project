@@ -6,9 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText confirmText;
     RadioButton gerantRadio;
     RadioButton clientRadio;
-    Button registerButton;
+    RelativeLayout registerButton;
 
     //endregion
 
@@ -50,6 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        this.setTitle("S'enregistrer");
         setContentView(R.layout.activity_register);
         // recupere l'instance de FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
@@ -63,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
         confirmText = findViewById(R.id.editConfirmPassword);
         gerantRadio = findViewById(R.id.radioG);
         clientRadio = findViewById(R.id.radioC);
-        registerButton = findViewById(R.id.button_register);
+        registerButton = findViewById(R.id.button_signup);
         registerButton.setOnClickListener(registerListner);
     }
 

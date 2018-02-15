@@ -27,6 +27,7 @@
     <string name="button_user_settings">Go to User Settings</string>
     <string name="button_home">Home</string>
     <string name="button_signin">Se connecter</string>
+    <string name="button_signup">S\'enregistrer</string>
 
     <!-- Strings related to home -->
     <string name="pingmeat">Ping Meat</string>
