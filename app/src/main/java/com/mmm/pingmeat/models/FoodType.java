@@ -12,7 +12,6 @@ import java.util.Map;
 @IgnoreExtraProperties
 public class FoodType
 {
-    //public Integer foodtype_id;
     public String name;
 
     public FoodType() {

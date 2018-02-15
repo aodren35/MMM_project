@@ -15,7 +15,6 @@ public class Gerant
 
     public String username;
     public String email;
-    //public String password;
     public String logo;
 
     public Gerant() {
