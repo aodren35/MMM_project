@@ -31,7 +31,6 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseUser mUser;
 
     // Db
-    FirebaseDatabase fireDb;
     DatabaseReference mDatabase;
 
     // UI
@@ -55,8 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
         // recupere l'instance de FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
         // recupere l'instance de FirebaseDatabase
-        fireDb = FirebaseDatabase.getInstance();
-        mDatabase = fireDb.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         // recupere les elements de la vue
         usernameText = findViewById(R.id.editUsername);
         mailText = findViewById(R.id.editMail);
