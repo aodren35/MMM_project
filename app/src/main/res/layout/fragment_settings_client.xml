@@ -75,7 +75,6 @@
                                 android:layout_toEndOf="@+id/imageContainer"
                                 android:layout_toRightOf="@+id/imageContainer"
                                 android:orientation="vertical">
-
                                 <TextView
                                     android:id="@+id/nameEditText"
                                     android:layout_width="wrap_content"
